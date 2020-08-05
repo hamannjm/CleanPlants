@@ -1,0 +1,4 @@
+ext {
+    rxJavaVersion = "2.2.6"
+    javaxInjectVersion = "1"
+}

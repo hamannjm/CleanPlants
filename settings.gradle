@@ -1,0 +1,5 @@
+include ':domain'
+include ':data'
+include ':local'
+include ':app'
+rootProject.name = "Plants"
