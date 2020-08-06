@@ -13,7 +13,7 @@ class PlantRepositoryImpl @Inject constructor(
         return localDataSource.getPlant(identifier)
     }
 
-    override fun createPlant(plant: PlantEntity): Observable<PlantEntity> {
-        return localDataSource.createPlant(plant)
+    override fun createPlant(): Observable<PlantEntity> {
+        return localDataSource.createPlant()
     }
 }

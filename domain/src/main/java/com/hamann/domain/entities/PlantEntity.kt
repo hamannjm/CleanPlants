@@ -1,6 +1,8 @@
 package com.hamann.domain.entities
 
-interface PlantEntity {
+import com.hamann.domain.entities.base.BaseEntity
+
+interface PlantEntity: BaseEntity {
     var identifier: String?
     var species: String?
     var commonName: String?

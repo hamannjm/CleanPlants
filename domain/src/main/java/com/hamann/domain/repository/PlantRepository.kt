@@ -6,5 +6,5 @@ import io.reactivex.Observable
 
 interface PlantRepository {
     fun getPlant(identifier: String): Observable<PlantEntity>
-    fun createPlant(plant: PlantEntity): Observable<PlantEntity>
+    fun createPlant(): Observable<PlantEntity>
 }

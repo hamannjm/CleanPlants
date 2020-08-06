@@ -5,6 +5,6 @@ import com.hamann.local.models.Plant
 
 class HomeActivity: AppCompatActivity() {
     private fun updateTesting() {
-        val plant = Plant()
+
     }
 }

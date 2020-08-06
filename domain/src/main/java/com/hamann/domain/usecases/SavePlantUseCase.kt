@@ -14,10 +14,7 @@ class SavePlantUseCase(
 ): ObservableUseCase<PlantEntity, SavePlantUseCase.params>(background, foreground) {
 
     override fun generateObservable(input: params?): Observable<PlantEntity> {
-        if (input?.plant == null) {
-            throw IllegalArgumentException("Must provide a plant to save!")
-        }
-        return repository.createPlant(input.plant)
+        return repository.createPlant()
     }
 
     data class params(val plant: PlantEntity? = null)
