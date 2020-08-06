@@ -1,14 +1,15 @@
 package com.hamann.local.creators
 
-import com.hamann.domain.entities.PlantEntity
 import com.hamann.local.creators.base.Creator
 import com.hamann.local.models.Plant
 import com.hamann.local.models.PlantModel
 import io.realm.Realm
 import java.util.*
+import javax.inject.Inject
 
-class PlantCreator: Creator<Plant> {
-    private val realm = Realm.getDefaultInstance()
+class PlantCreator @Inject constructor(
+    private val realm: Realm
+): Creator<Plant> {
     override fun create(): Plant {
         val plantModel = PlantModel()
         plantModel.identifier = UUID.randomUUID().toString()

@@ -6,11 +6,12 @@ import com.hamann.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import java.lang.IllegalArgumentException
+import javax.inject.Inject
 
-class GetPlantUseCase(
+class GetPlantTask @Inject constructor(
     private val repository: PlantRepository,
     background: Scheduler,
-    foreground: Scheduler): ObservableUseCase<PlantEntity, GetPlantUseCase.Params>(background, foreground) {
+    foreground: Scheduler): ObservableUseCase<PlantEntity, GetPlantTask.Params>(background, foreground) {
 
     override fun generateObservable(input: Params?): Observable<PlantEntity> {
         if (input == null || input.identifier == "") {

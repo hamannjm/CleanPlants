@@ -1,4 +1,4 @@
-package models.delegates
+package com.hamann.plants.models.delegates
 
 import androidx.databinding.BaseObservable
 import kotlin.reflect.KProperty

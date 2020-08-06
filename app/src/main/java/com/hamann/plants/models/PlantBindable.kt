@@ -1,9 +1,8 @@
-package models
+package com.hamann.plants.models
 
 import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 import com.hamann.domain.entities.PlantEntity
-import models.delegates.BindableEntityDelegate
+import com.hamann.plants.models.delegates.BindableEntityDelegate
 
 class PlantBindable(
     private val entity: PlantEntity

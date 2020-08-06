@@ -1,4 +1,8 @@
 ext {
     rxJavaVersion = "2.2.6"
     javaxInjectVersion = "1"
+    daggerVersion = "2.16"
+    rxAndroidVersion = "2.1.0"
+
+    lifecycleVersion = "2.0.0"
 }

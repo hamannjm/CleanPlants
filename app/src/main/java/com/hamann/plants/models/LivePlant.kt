@@ -1,4 +1,4 @@
-package models
+package com.hamann.plants.models
 
 import com.hamann.domain.entities.PlantEntity
 
