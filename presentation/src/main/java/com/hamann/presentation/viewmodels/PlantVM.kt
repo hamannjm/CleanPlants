@@ -10,5 +10,5 @@ import javax.inject.Inject
 class PlantVM @Inject internal constructor(
     private val getPlantTask: GetPlantTask
 ): ViewModel(){
-    
+
 }

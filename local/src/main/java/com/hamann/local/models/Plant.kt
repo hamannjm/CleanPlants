@@ -5,7 +5,7 @@ import com.hamann.local.models.delegates.RealmPropertyDelegate
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
-class Plant internal constructor(private val plantModel: PlantModel): PlantEntity {
+class Plant internal constructor(plantModel: PlantModel): PlantEntity {
     override var identifier: String? by RealmPropertyDelegate(
         plantModel,
         plantModel.identifier

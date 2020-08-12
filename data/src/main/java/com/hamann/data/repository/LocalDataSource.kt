@@ -5,5 +5,6 @@ import io.reactivex.Observable
 
 interface LocalDataSource {
     fun getPlant(identifier: String): Observable<PlantEntity>
+    fun getAllPlants(): Observable<PlantEntity>
     fun createPlant(): Observable<PlantEntity>
 }
