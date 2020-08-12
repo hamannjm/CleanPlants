@@ -11,11 +11,16 @@ class PlantCreator @Inject constructor(
     private val realm: Realm
 ): Creator<Plant> {
     override fun create(): Plant {
+        val managedPlant = newManagedPlant()
+        return Plant(managedPlant)
+    }
+
+    internal fun newManagedPlant(): PlantModel {
         val plantModel = PlantModel()
         plantModel.identifier = UUID.randomUUID().toString()
         realm.beginTransaction()
         val managedPlant = realm.copyToRealm(plantModel)
         realm.commitTransaction()
-        return Plant(managedPlant)
+        return managedPlant
     }
 }
