@@ -1,35 +1,22 @@
 package com.hamann.local.plants
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.hamann.local.creators.PlantCreator
 import com.hamann.local.models.PlantModel
+import com.hamann.local.source.LocalDataSourceImpl
+import io.reactivex.schedulers.Schedulers
 import io.realm.*
-import io.realm.internal.RealmCore
-import io.realm.log.RealmLog
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
-import org.powermock.api.mockito.PowerMockito.*
-import org.powermock.core.classloader.annotations.PowerMockIgnore
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor
-import org.powermock.modules.junit4.PowerMockRunner
-//import org.robolectric.RobolectricTestRunner
-//import org.robolectric.annotation.Config
 
 
-@RunWith(PowerMockRunner::class)
-//@PowerMockRunnerDelegate(RobolectricTestRunner::class)
-//@Config(sdk = [21])
-@PowerMockIgnore(value = ["org.mockito.*", "org.robolectric.*", "android.*"])
-@SuppressStaticInitializationFor("io.realm.internal.Util")
-@PrepareForTest(value = [Realm::class, RealmConfiguration::class, RealmQuery::class, RealmResults::class, RealmCore::class, RealmLog::class])
+
+@RunWith(AndroidJUnit4::class)
 class PlantRealmTests {
 
     companion object {
@@ -57,35 +44,28 @@ class PlantRealmTests {
     }
 
     private lateinit var mockRealm: Realm
+    private lateinit var testConfiguration: RealmConfiguration
 
     @Before
     fun setup() {
-        mockStatic(RealmCore::class.java)
-        mockStatic(RealmLog::class.java)
-        mockStatic(Realm::class.java)
-        mockStatic(RealmConfiguration::class.java)
-        Realm.init(ApplicationProvider.getApplicationContext())
-
-        mockRealm = mock(Realm::class.java)
-        val mockRealmConfig = mock(RealmConfiguration::class.java)
-
-        doNothing().`when`(RealmCore::class.java)
-        RealmCore.loadLibrary(any(Context::class.java))
-
-        whenNew(RealmConfiguration::class.java).withAnyArguments().thenReturn(mockRealmConfig)
-
-        `when`(Realm.getDefaultInstance()).thenReturn(mockRealm)
-
-//        `when`(mockRealm.createObject(PlantModel::class.java)).thenReturn(PlantModel())
-//
-//        val mockQuery = mockRealmQuery<PlantModel>()!!
-//
-//        `when`(mockQuery.findFirstAsync()).thenReturn(plants.first())
+        val context = InstrumentationRegistry.getInstrumentation().context
+        Realm.init(context)
+        testConfiguration = RealmConfiguration.Builder()
+            .inMemory()
+            .name("unitTest-realm")
+            .build()
+        mockRealm = Realm.getInstance(testConfiguration)
+        mockRealm.executeTransaction { realm ->
+            plants.forEach { plant ->
+                realm.insert(plant)
+            }
+        }
     }
 
     @After
-    fun cleanup() {
-        mockRealm.deleteAll()
+    fun teardown() {
+        mockRealm.close()
+        Realm.deleteRealm(testConfiguration)
     }
 
     @Test
@@ -96,12 +76,12 @@ class PlantRealmTests {
         assertTrue(plant.isManaged)
     }
 
-
-    private fun <T : RealmObject?> mockRealmQuery(): RealmQuery<*>? {
-        return mock(RealmQuery::class.java)
-    }
-
-    private fun <T : RealmObject?> mockRealmResults(): RealmResults<*>? {
-        return mock(RealmResults::class.java)
+    @Test
+    fun canFindPlant() {
+        val localSource = LocalDataSourceImpl(
+            mockRealm,
+            PlantCreator((mockRealm)),
+            Schedulers.io()
+        )
     }
 }

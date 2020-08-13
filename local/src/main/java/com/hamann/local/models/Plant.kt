@@ -20,9 +20,9 @@ class Plant internal constructor(plantModel: PlantModel): PlantEntity {
     )
 }
 
-internal open class PlantModel(): RealmObject(), PlantEntity {
+internal open class PlantModel(): RealmObject() {
     @PrimaryKey
-    override var identifier: String? = null
-    override var species: String? = null
-    override var commonName: String? = null
+    var identifier: String? = null
+    var species: String? = null
+    var commonName: String? = null
 }

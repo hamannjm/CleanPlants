@@ -9,6 +9,9 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Scheduler
 import io.realm.Realm
+import io.realm.RealmChangeListener
+import io.realm.RealmResults
+import io.realm.kotlin.addChangeListener
 import io.realm.rx.ObjectChange
 import javax.inject.Inject
 
@@ -23,16 +26,22 @@ class LocalDataSourceImpl @Inject constructor(
             .asChangesetObservable<PlantModel>()
             .observeOn(background)
             .filter { change -> change.`object`.isLoaded }
-            .map { loadedChange -> loadedChange.`object` as PlantEntity }
+            .map { loadedChange ->
+                val managedPlant = loadedChange.`object`
+                Plant(managedPlant)
+            }
     }
 
     override fun getAllPlants(): Observable<PlantEntity> {
-        val results = realm.where(PlantModel::class.java).findAllAsync()
-        return Observable.create { emitter: ObservableEmitter<PlantEntity> ->
-            results.forEach { plant ->
-                emitter.onNext(plant)
-            }
-            emitter.onComplete()
+        return Observable.create<PlantEntity> { emitter: ObservableEmitter<PlantEntity> ->
+            val results = realm.where(PlantModel::class.java).findAllAsync()
+            results
+                .addChangeListener(RealmChangeListener<RealmResults<PlantModel>> {
+                    it.forEach { loaded ->
+                        emitter.onNext(Plant(loaded))
+                    }
+                    emitter.onComplete()
+                })
         }
     }
 
