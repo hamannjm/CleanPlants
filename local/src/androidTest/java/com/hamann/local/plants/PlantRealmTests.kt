@@ -20,15 +20,13 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor
 import org.powermock.modules.junit4.PowerMockRunner
-import org.powermock.modules.junit4.PowerMockRunnerDelegate
-import org.powermock.modules.junit4.rule.PowerMockRule
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
+//import org.robolectric.RobolectricTestRunner
+//import org.robolectric.annotation.Config
 
 
 @RunWith(PowerMockRunner::class)
-@PowerMockRunnerDelegate(RobolectricTestRunner::class)
-@Config(sdk = [21])
+//@PowerMockRunnerDelegate(RobolectricTestRunner::class)
+//@Config(sdk = [21])
 @PowerMockIgnore(value = ["org.mockito.*", "org.robolectric.*", "android.*"])
 @SuppressStaticInitializationFor("io.realm.internal.Util")
 @PrepareForTest(value = [Realm::class, RealmConfiguration::class, RealmQuery::class, RealmResults::class, RealmCore::class, RealmLog::class])
@@ -57,9 +55,6 @@ class PlantRealmTests {
                 it.commonName = "Boston fern"
             })
     }
-
-    @Rule
-    val rule = PowerMockRule()
 
     private lateinit var mockRealm: Realm
 
