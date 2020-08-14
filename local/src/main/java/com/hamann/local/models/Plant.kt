@@ -6,10 +6,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 class Plant internal constructor(plantModel: PlantModel): PlantEntity {
-    override var identifier: String? by RealmPropertyDelegate(
-        plantModel,
-        plantModel.identifier
-    )
+    override val identifier: String = plantModel.identifier ?: throw Throwable("Must provide primary key!")
     override var species: String? by RealmPropertyDelegate(
         plantModel,
         plantModel.species

@@ -3,7 +3,9 @@ package com.hamann.local.plants
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hamann.local.creators.PlantCreator
+import com.hamann.local.models.Plant
 import com.hamann.local.models.PlantModel
+import com.hamann.local.plants.models.TestPlantEntityImpl
 import com.hamann.local.source.LocalDataSourceImpl
 import io.reactivex.schedulers.Schedulers
 import io.realm.*
@@ -14,30 +16,24 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
-
 @RunWith(AndroidJUnit4::class)
 class PlantRealmTests {
 
     companion object {
         private val plants = listOf(
-            PlantModel().also {
-                it.identifier = "1"
+            TestPlantEntityImpl("1").also {
                 it.species = "Monstera adonsonii"
                 it.commonName = "Swiss Cheese Plant"
             },
-            PlantModel().also {
-                it.identifier = "2"
+            TestPlantEntityImpl("2").also {
                 it.species = "Zamioculcas zamiifolia"
                 it.commonName = "ZZ Plant"
             },
-            PlantModel().also {
-                it.identifier = "3"
+            TestPlantEntityImpl("3").also {
                 it.species = "Pachira glabra"
                 it.commonName = "Money tree"
             },
-            PlantModel().also {
-                it.identifier = "4"
+            TestPlantEntityImpl("4").also {
                 it.species = "Nephrolepis exaltata"
                 it.commonName = "Boston fern"
             })
@@ -55,11 +51,6 @@ class PlantRealmTests {
             .name("unitTest-realm")
             .build()
         mockRealm = Realm.getInstance(testConfiguration)
-        mockRealm.executeTransaction { realm ->
-            plants.forEach { plant ->
-                realm.insert(plant)
-            }
-        }
     }
 
     @After
@@ -77,11 +68,43 @@ class PlantRealmTests {
     }
 
     @Test
+    fun canCreatePlant_CustomID() {
+        val creator = PlantCreator(mockRealm)
+        val testPlant = plants.first()
+        val managedPlant = creator.newManagedPlant(testPlant.identifier)
+        assertTrue(managedPlant.isManaged)
+        assertTrue(managedPlant.identifier == testPlant.identifier)
+    }
+
+    @Test
+    fun canModifyPlant() {
+        val creator = PlantCreator(mockRealm)
+        val plant = creator.create()
+        val plantToSave = plants.first()
+        plant.commonName = plantToSave.commonName
+        plant.species = plantToSave.species
+    }
+
+    @Test
     fun canFindPlant() {
+        val creator = PlantCreator(mockRealm)
+        plants.forEach { plant ->
+            val managedPlant = creator.newManagedPlant(plant.identifier)
+            Plant(managedPlant).also {
+                it.commonName = plant.commonName
+                it.species = plant.species
+            }
+        }
+        val plantToFind = plants[1]
         val localSource = LocalDataSourceImpl(
             mockRealm,
-            PlantCreator((mockRealm)),
+            creator,
             Schedulers.io()
         )
+        localSource.getPlant(plantToFind.identifier)
+            .subscribeOn(Schedulers.io())
+            .subscribe { plant ->
+                assertTrue(plant.identifier == plantToFind.identifier)
+            }
     }
 }

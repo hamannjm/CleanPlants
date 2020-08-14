@@ -15,11 +15,10 @@ class PlantCreator @Inject constructor(
         return Plant(managedPlant)
     }
 
-    internal fun newManagedPlant(): PlantModel {
-        val plantModel = PlantModel()
-        plantModel.identifier = UUID.randomUUID().toString()
+    internal fun newManagedPlant(identifier: String? = null): PlantModel {
+        val key = identifier ?: UUID.randomUUID().toString()
         realm.beginTransaction()
-        val managedPlant = realm.copyToRealm(plantModel)
+        val managedPlant = realm.createObject(PlantModel::class.java, key)
         realm.commitTransaction()
         return managedPlant
     }

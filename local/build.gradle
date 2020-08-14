@@ -60,7 +60,4 @@ dependencies {
     androidTestImplementation "org.powermock:powermock-module-junit4:2.0.2"
     androidTestImplementation "org.powermock:powermock-api-mockito2:2.0.2"
     testImplementation 'junit:junit:4.12'
-
-
-
 }

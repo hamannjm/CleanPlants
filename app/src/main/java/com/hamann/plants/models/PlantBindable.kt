@@ -7,8 +7,7 @@ import com.hamann.plants.models.delegates.BindableEntityDelegate
 class PlantBindable(
     private val entity: PlantEntity
 ): BaseObservable(), PlantEntity {
-
-    override var identifier: String? by BindableEntityDelegate(-1,entity.identifier)
+    override val identifier: String = entity.identifier
     override var species: String? by BindableEntityDelegate(-1, entity.species)
     override var commonName: String? by BindableEntityDelegate(-1, entity.commonName)
 }
