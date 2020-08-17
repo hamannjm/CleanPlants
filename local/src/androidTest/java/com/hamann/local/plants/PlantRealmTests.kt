@@ -13,6 +13,7 @@ import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -41,6 +42,12 @@ class PlantRealmTests {
 
     private lateinit var mockRealm: Realm
     private lateinit var testConfiguration: RealmConfiguration
+
+    //Need to get access to io.realm.rule for the RunInLooperThread functionality...
+//    @Rule
+//    val looperRule = RunInLooperThread
+
+
 
     @Before
     fun setup() {
@@ -98,8 +105,7 @@ class PlantRealmTests {
         val plantToFind = plants[1]
         val localSource = LocalDataSourceImpl(
             mockRealm,
-            creator,
-            Schedulers.io()
+            creator
         )
         localSource.getPlant(plantToFind.identifier)
             .subscribeOn(Schedulers.io())

@@ -7,15 +7,15 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import javax.inject.Inject
 
-class SavePlantTask @Inject constructor(
+class CreatePlantTask @Inject constructor(
     private val repository: PlantRepository,
     background: Scheduler,
     foreground: Scheduler
-): ObservableUseCase<PlantEntity, SavePlantTask.params>(background, foreground) {
+): ObservableUseCase<PlantEntity, CreatePlantTask.Params>(background, foreground) {
 
-    override fun generateObservable(input: params?): Observable<PlantEntity> {
+    override fun generateObservable(input: Params?): Observable<PlantEntity> {
         return repository.createPlant()
     }
 
-    data class params(val plant: PlantEntity? = null)
+    data class Params(val nothing: Nothing)
 }

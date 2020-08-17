@@ -17,14 +17,12 @@ import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(
     private val realm: Realm,
-    private val plantCreator: PlantCreator,
-    private val background: Scheduler
+    private val plantCreator: PlantCreator
 ): LocalDataSource {
 
     override fun getPlant(identifier: String): Observable<PlantEntity> {
         return realm.where(PlantModel::class.java).equalTo(Plant::identifier.name, identifier).findFirstAsync()
             .asChangesetObservable<PlantModel>()
-            .observeOn(background)
             .filter { change -> change.`object`.isLoaded }
             .map { loadedChange ->
                 val managedPlant = loadedChange.`object`
